@@ -1,3 +1,5 @@
 .env
 docker/mysql/dbdata
 docker/mysql/mysql.cnf
+docker/nginx/logs/access.log
+docker/nginx/logs/error.log
