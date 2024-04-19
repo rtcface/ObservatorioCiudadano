@@ -1,0 +1,107 @@
+# # Los archivos docker-compose.yml son versionados, lo que significa que es muy importante indicar la versión de las instrucciones que queremos darle.
+version: "3.7"
+
+networks:
+  docker.network:
+    driver: bridge
+
+services:
+  php:
+    build: ./docker/php
+    restart: unless-stopped
+    container_name: docker.php
+    tty: true
+    depends_on:
+      - mysql
+    networks:
+      - docker.network
+    volumes:
+      - .:/var/www/
+
+  nginx:
+    build: ./docker/nginx
+    container_name: nginx
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - php
+    ports:
+      - "433:433"
+      - "8100:80"
+    networks:
+      - docker.network
+    volumes:
+      - .:/var/www
+
+  mysql:
+    image: mysql:5
+    restart: unless-stopped
+    container_name: mysql_server
+    tty: true
+    ports:
+      - "3306:3306"
+    networks:
+      - docker.network
+    volumes:
+      - "./docker/mysql/mysql.cnf:/etc/mysql/conf.d/custom.cnf:ro"
+      - "./docker/mysql/dbdata:/var/lib/mysql"
+    environment:
+      MYSQL_DATABASE: test_db
+      MYSQL_ROOT_PASSWORD: my_secret_pw_shh
+      MYSQL_PASSWORD: devpass
+      MYSQL_USER: devuser
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    tty: true
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+    networks:
+      - docker.network
+    environment:
+      PMA_HOST: mysql
+      PMA_ARBITRARY: 1
+      PMA_PORT: 3306
+# version: "3"
+
+# services:
+#   db:
+#     image: mysql:5.7
+#     environment:
+#       MYSQL_ROOT_PASSWORD: my_secret_pw_shh
+#       MYSQL_DATABASE: test_db
+#       MYSQL_USER: devuser
+#       MYSQL_PASSWORD: devpass
+#     ports:
+#       - "9906:3306"
+#   web:
+#     image: php:7.2.2-apache
+#     container_name: php_web
+#     depends_on:
+#       - db
+#     volumes:
+#       - ./dist:/var/www/html/
+#     ports:
+#       - "8100:80"
+#     stdin_open: true
+#     tty: true
+# version: "3.3"
+
+# # Servidor nginx
+# services:
+#   web:
+#     image: nginx:latest
+#     ports:
+#       - "8000:80"
+#     volumes:
+#       - ./subscripcion:/var/www/html
+#       - ./default.conf:/etc/nginx/conf.d/default.conf
+#     links:
+#       - php-fpm
+#   php-fpm:
+#     build: .
+#     volumes:
+#       - ./subscripcion:/var/www/html
