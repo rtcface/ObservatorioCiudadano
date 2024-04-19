@@ -1,6 +1,2 @@
 <?php
-use google\appengine\api\cloud_storage\CloudStorageTools;
-
-
-
-?>
+include './api-google/vendor/autoload.php'
