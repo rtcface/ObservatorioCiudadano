@@ -49,7 +49,7 @@
                 <div class="mb-1 col">
                     <label for="UserName" class="form-label">Nombres</label>
                     <input type="text" class="form-control" style="text-transform: uppercase;" id="UserName"
-                        name="UserName">
+                        name="UserName" value="<?php if(isset($UserName)) echo $UserName ?>">
                     <?php
                         if(isset($_POST['save'])){
                             if(empty($UserName)){                        
@@ -64,7 +64,7 @@
                 <div class="mb-1 col">
                     <label for="LastName" class="form-label">Apellidos</label>
                     <input type="text" class="form-control" style="text-transform: uppercase;" id="LastName"
-                        name="LastName">
+                        name="LastName" value="<?php if(isset($LastName)) echo $LastName ?>">
                     <?php
                     if(isset($_POST['save'])){                        
                         if(empty($LastName)){
@@ -78,10 +78,16 @@
             <div class="row align-items-center">
                 <div class="mb-1 col">
                     <label for="Phone" class="form-label">Número Telefónico</label>
-                    <input type="tel" maxlength="10" class="form-control" id="Phone" name="Phone" pattern="[0-9]{10}">
+                    <input type="tel" maxlength="10" class="form-control" id="Phone" name="Phone"
+                        value="<?php if(isset($Phone)) echo $Phone ?>">
                     <?php    
                     if(isset($_POST['save'])){                    
                         if(!empty($Phone)){
+                            
+                            $res=checkNumber($Phone);
+                            
+                            if($res) echo $res;
+
                             if(strlen($Phone) != 10){
                                 echo validator_field_form("Phone",ErrorType::INVALID);   
                                 $formValid=False;                            
@@ -106,7 +112,8 @@
             <div class="row align-items-center">
                 <div class="mb-1 col">
                     <label for="Email" class="form-label">Correo Electrónico</label>
-                    <input type="email" style="text-transform: lowercase;" class="form-control" id="Email" name="Email">
+                    <input type="email" style="text-transform: lowercase;" class="form-control" id="Email" name="Email"
+                        value="<?php if(isset($Email)) echo $Email ?>">
                     <?php 
                     if(isset($_POST['save'])){                       
                         if(!empty($Email)){
@@ -129,7 +136,7 @@
                 <div class="mb-1 col">
                     <label for="ConfirmEmail" class="form-label">Confirmar Correo Electrónico</label>
                     <input type="email" style="text-transform: lowercase;" class="form-control" id="ConfirmEmail"
-                        name="ConfirmEmail">
+                        name="ConfirmEmail" value="<?php if(isset($ConfirmEmail)) echo $ConfirmEmail ?>">
                     <?php
                     if(isset($_POST['save'])){                        
                         if(!empty($ConfirmEmail)){ 
@@ -151,11 +158,13 @@
                     ?>
                 </div>
             </div>
-            <div class="row align-items-center">
+            <div class=" row align-items-center">
                 <div class="mb-1 col">
-                    <label for="Reasons" class="form-label">Menciona las razones por las cuales desea ser integrante del
+                    <label for="Reasons" class="form-label">Menciona las razones por las cuales desea ser integrante
+                        del
                         Observatorio Anticorrupción</label>
-                    <textarea class="form-control" id="Reasons" rows="2" name="Reasons"></textarea>
+                    <textarea class="form-control" id="Reasons" rows="2" name="Reasons"
+                        value="<?php if(isset($Reasons)) echo $Reasons ?>"></textarea>
                     <?php 
                     if(isset($_POST['save'])){                       
                         if(empty($Reasons)){
@@ -176,7 +185,8 @@
                             id="NoRegistrado">
                         <label class="form-check-label" for="NoRegistrado">
                             No haber sido
-                            registrado como candidata o candidato a cargo alguno de elección popular, en los tres años
+                            registrado como candidata o candidato a cargo alguno de elección popular, en los tres
+                            años
                             inmediatos anteriores a la postulación <span><em>(requerido)</em></span>
                         </label>
                     </div>
@@ -204,7 +214,8 @@
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="NoCargo" name="terminos[]" id="NoCargo">
                         <label class="form-check-label" for="NoCargo">
-                            No haber tenido cargo alguno de elección popular en los tres años inmediatos anteriores a la
+                            No haber tenido cargo alguno de elección popular en los tres años inmediatos anteriores
+                            a la
                             designación<span><em>(requerido)</em></span>
                         </label>
                     </div>
@@ -232,7 +243,8 @@
                         <input class="form-check-input" type="checkbox" value="NoDirigente" name="terminos[]"
                             id="NoDirigente">
                         <label class="form-check-label" for="NoDirigente">
-                            No haber sido dirigente nacional, estatal o municipal en algún partido político, en los tres
+                            No haber sido dirigente nacional, estatal o municipal en algún partido político, en los
+                            tres
                             años inmediatos anteriores a la designación.<span><em>(requerido)</em></span>
                         </label>
                     </div>
@@ -284,7 +296,8 @@
                             id="Convocatoria">
                         <label class="form-check-label" for="Convocatoria">
                             He leído la Convocatoria para formar parte del Observatorio Anticorrupción y estoy de
-                            acuerdo que en los casos no previstos en las etapas del proceso de selección sean resueltos
+                            acuerdo que en los casos no previstos en las etapas del proceso de selección sean
+                            resueltos
                             por la Secretaría Ejecutiva del Sistema Anticorrupción del Estado de
                             Tlaxcala.<span><em>(requerido)</em></span>
                         </label>
@@ -433,18 +446,17 @@
                 <button type="submit" class="btn btn-primary" name="save">Enviar Información</button>
                 <?php
                 if($formValid){
-                  /*  $data1="";
-                   while($data1===""){
-                   $data1 = 
+                  
+                    $url_ine="";
+                    while($url_ine===""){
+                    $url_ine=uploadFile($file_tmp_ine,$file_save_name_ine,$file_type_ine);
                     }
-                    //echo "<p>".$data1."</p>";
-                    $data2="";
-                    while($data2===""){
-                        $data2= uploadFile($file_tmp_ine,$file_save_name_ine_,$file_type_ine);
-                    } */
-                    //echo "<p>".$data2."</p>";
-                    uploadFile($file_tmp_ine,$file_save_name_ine_,$file_type_ine);
-                    uploadFile($file_tmp_cd,$file_save_name_cd,$file_type_cd);
+                    echo "<p>".$url_ine."</p>";
+                    $url_cd="";
+                    while($url_cd===""){
+                     $url_cd=uploadFile($file_tmp_cd,$file_save_name_cd,$file_type_cd);
+                    }
+                    echo "<p>".$url_cd."</p>";
                     echo "<p> UserName:-".$UserName."</p>";
                     echo "<p> LastName:-".$LastName."</p>";
                     echo "<p> Email:-".$Email."</p>";
@@ -453,9 +465,9 @@
                     echo "<p> ConfirmEmail:-".$ConfirmEmail."</p>";
                     echo "<p> Reasons:-".$Reasons."</p>";
                     echo "<p> Terms:-".count($Terms)."</p>";
-                    echo "<script>alert('Información enviada correctamente')</script>";                               
+                    echo success("La informacion se envio correctamente");                               
                 }else{
-                    echo "<script>alert('Información no enviada')</script>";
+                    echo error("Faltan campos por llenar");
                 }
                 ?>
             </div>

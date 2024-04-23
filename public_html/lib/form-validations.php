@@ -39,6 +39,11 @@ function validate_empty_field($field){
     return true;
 }
 
+function checkNumber($number){
+    if(!is_numeric($number)) return error("El campo solo acepta numeros");   
+    return false;
+}
+
 function validate_form($data){
     $data = trim($data);
     $data = stripslashes($data);
