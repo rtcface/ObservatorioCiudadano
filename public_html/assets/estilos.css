@@ -1,9 +1,7 @@
 
-.local_container{
-	
-    height: 100vh; 
-    width:100vw;
-    background-image: url(./img/footer.png);
+body{
+    
+    background-image: url(./img/white.jpg);
     background-size: cover;
     background-position: bottom right; 
     background-repeat: no-repeat;
@@ -14,4 +12,21 @@
 	color: #000;	
     margin: 0 auto;
     
+}
+
+.header-register{
+    display: flex; 
+    width: 100%;
+    justify-content: center;
+}
+
+.logo{
+    width: 30rem;
+    margin: 1rem;
+    padding: 1rem;
+}
+
+img{
+    width: 100%;   
+    display: block;
 }

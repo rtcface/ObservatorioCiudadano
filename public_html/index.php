@@ -2,7 +2,6 @@
     include("./lib/form-validations.php");
     include("./loadfile.php");
     include "./lib/variables.php";
-    include "./lib/functions.php";
 
 
 
@@ -12,13 +11,13 @@
     if(isset($_POST['save'])){
         /* escribe todos los campos que se envian en el post de este formulario*/
         if(isset($_POST['UserName']) && isset($_POST['LastName']) && isset($_POST['Email']) && isset($_POST['Phone']) && isset($_POST['Gender']) && isset($_POST['ConfirmEmail']) && isset($_POST['Reasons']) && isset($_POST['terminos']) && isset($_FILES['ComprobanteDomicilio']) && isset($_FILES['Ine'])){
-            $UserName = clean_utf(strtoupper($_POST['UserName']));
-            $LastName = clean_utf(strtoupper($_POST['LastName']));
+            $UserName = strtoupper($_POST['UserName']);
+            $LastName = strtoupper($_POST['LastName']);
             $Email = strtolower($_POST['Email']);
-            $Phone = clean_utf(strtoupper($_POST['Phone']));
-            $Gender = clean_utf(strtoupper($_POST['Gender']));
+            $Phone = strtoupper($_POST['Phone']);
+            $Gender = strtoupper($_POST['Gender']);
             $ConfirmEmail = strtolower($_POST['ConfirmEmail']);
-            $Reasons = clean_utf(strtoupper($_POST['Reasons']));
+            $Reasons = strtoupper($_POST['Reasons']);
             $Terms = $_POST['terminos'];
             $ComprobanteDomicilio = $_FILES['ComprobanteDomicilio'];
             $Ine = $_FILES['Ine'];
@@ -39,13 +38,20 @@
 
     <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="./assets/estilos.css">
-    <title>Document</title>
+    <title>Registro de Observatorios Ciudadanos</title>
+    <link rel="icon" type="image/x-icon"
+        href="https://saetlax.org/wp-content/uploads/2019/04/cropped-Logo_SAETLAX-15-150x150.png">
 </head>
 
 <body>
     <div class="container">
-        <h1 class="mb-3 mt-5">Registro de Observatorios Ciudadanos </h1>
-        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST"
+        <div class="header-register">
+            <div class="logo">
+                <img src="./assets/img/logo.png" alt="Header register">
+            </div>
+        </div>
+        <h1 class="mb-3 mt-1">Registro de Observatorios Ciudadanos </h1>
+        <form id="register" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST"
             class=" border border-1 rounded p-5 m-0 opacity-75" enctype="multipart/form-data">
             <div class="row align-items-center">
                 <div class="mb-1 col">
@@ -55,7 +61,7 @@
                     <?php
                         if(isset($_POST['save'])){
                             if(empty($UserName)){                        
-                            echo validator_field_form("Nombres",ErrorType::REQUIRED);   
+                            echo validator_field_form("Nombres","REQUIRED");   
                             $formValid=False;
                             }     
                     }           
@@ -70,7 +76,7 @@
                     <?php
                     if(isset($_POST['save'])){                        
                         if(empty($LastName)){
-                            echo validator_field_form("Apellidos",ErrorType::REQUIRED);    
+                            echo validator_field_form("Apellidos","REQUIRED");    
                             $formValid=False;
                         }   
                     }                 
@@ -91,11 +97,11 @@
                             if($res) echo $res;
 
                             if(strlen($Phone) != 10){
-                                echo validator_field_form("Phone",ErrorType::INVALID);   
+                                echo validator_field_form("Phone","INVALID");   
                                 $formValid=False;                            
                             }                                                       
                         }else{
-                            echo validator_field_form("Número Telefónico",ErrorType::REQUIRED);  
+                            echo validator_field_form("Número Telefónico","REQUIRED");  
                             $formValid=False;                 
                         }
                     }
@@ -121,15 +127,15 @@
                         if(!empty($Email)){
                             if(validate_email($Email)){
                                 if(!validate_emails_match($Email,$ConfirmEmail)){
-                                    echo validator_field_form("ConfirmEmail",ErrorType::MATCH);
+                                    echo validator_field_form("ConfirmEmail","MATCH");
                                     $formValid=False;
                                 }   
                             }else{
-                                echo validator_field_form("Email",ErrorType::INVALID);
+                                echo validator_field_form("Email","INVALID");
                                 $formValid=False;
                             }
                         }else{
-                            echo validator_field_form("Correo Electrónico",ErrorType::REQUIRED); 
+                            echo validator_field_form("Correo Electrónico","REQUIRED"); 
                                 $formValid=False;
                         }  
                     }                  
@@ -144,16 +150,16 @@
                         if(!empty($ConfirmEmail)){ 
                             if(validate_email($ConfirmEmail)){
                                 if(!validate_emails_match($Email,$ConfirmEmail)){
-                                    echo validator_field_form("ConfirmEmail",ErrorType::MATCH);
+                                    echo validator_field_form("ConfirmEmail","MATCH");
                                     $formValid=False;
                                 }                                
                             }else{
-                                echo validator_field_form("ConfirmEmail",ErrorType::INVALID);
+                                echo validator_field_form("ConfirmEmail","INVALID");
                                 $formValid=False;
                             }                          
                                                                    
                         }else{
-                            echo validator_field_form("Confirmar Correo Electrónico",ErrorType::REQUIRED);
+                            echo validator_field_form("Confirmar Correo Electrónico","REQUIRED");
                             $formValid=False;                             
                         }
                     }                    
@@ -171,7 +177,7 @@
                     if(isset($_POST['save'])){                       
                         if(empty($Reasons)){
                             echo validator_field_form("Menciona las razones por las cuales desea ser integrante del
-                            Observatorio Anticorrupción",ErrorType::REQUIRED);
+                            Observatorio Anticorrupción","REQUIRED");
                             $formValid=False;
                         }     
                     }               
@@ -197,13 +203,13 @@
                         if(!isset($_POST['terminos'])){
                             echo validator_field_form("No haber sido
                             registrado como candidata o candidato a cargo alguno de elección popular, en los tres años
-                            inmediatos anteriores a la postulación",ErrorType::REQUIRED);
+                            inmediatos anteriores a la postulación","REQUIRED");
                             $formValid=False;
                         }else{
                             if(!in_array("NoRegistrado", $_POST['terminos'])){
                                 echo validator_field_form("No haber sido
                                 registrado como candidata o candidato a cargo alguno de elección popular, en los tres años
-                                inmediatos anteriores a la postulación", ErrorType::REQUIRED);
+                                inmediatos anteriores a la postulación", "REQUIRED");
                                 $formValid=False;
                             }
                         }     
@@ -225,13 +231,13 @@
                     if(isset($_POST['save'])){                       
                         if(!isset($_POST['terminos'])){
                             echo validator_field_form(" No haber tenido cargo alguno de elección popular en los tres años inmediatos anteriores a la
-                            designación",ErrorType::REQUIRED);
+                            designación","REQUIRED");
                             $formValid=False;
                         }else{
                             if(!in_array("NoCargo", $_POST['terminos'])){
                                 echo validator_field_form("No haber sido
                                 registrado como candidata o candidato a cargo alguno de elección popular, en los tres años
-                                inmediatos anteriores a la postulación", ErrorType::REQUIRED);
+                                inmediatos anteriores a la postulación", "REQUIRED");
                                 $formValid=False;
                             }
                         }     
@@ -254,12 +260,12 @@
                     if(isset($_POST['save'])){                       
                         if(!isset($_POST['terminos'])){
                             echo validator_field_form("No haber sido dirigente nacional, estatal o municipal en algún partido político, en los tres
-                            años inmediatos anteriores a la designación.",ErrorType::REQUIRED);
+                            años inmediatos anteriores a la designación.","REQUIRED");
                             $formValid=False;
                         }else{
                             if(!in_array("NoDirigente", $_POST['terminos'])){
                                 echo validator_field_form("No haber sido dirigente nacional, estatal o municipal en algún partido político, en los tres
-                                años inmediatos anteriores a la designación.", ErrorType::REQUIRED);
+                                años inmediatos anteriores a la designación.", "REQUIRED");
                                 $formValid=False;
                             }
                         }     
@@ -279,11 +285,11 @@
                     <?php 
                     if(isset($_POST['save'])){                       
                         if(!isset($_POST['terminos'])){
-                            echo validator_field_form("No ser servidora o servidor público",ErrorType::REQUIRED);
+                            echo validator_field_form("No ser servidora o servidor público","REQUIRED");
                             $formValid=False;
                         }else{
                             if(!in_array("NoServidor", $_POST['terminos'])){
-                                echo validator_field_form("No ser servidora o servidor público", ErrorType::REQUIRED);
+                                echo validator_field_form("No ser servidora o servidor público", "REQUIRED");
                                 $formValid=False;
                             }
                         }     
@@ -302,6 +308,8 @@
                             resueltos
                             por la Secretaría Ejecutiva del Sistema Anticorrupción del Estado de
                             Tlaxcala.<span><em>(requerido)</em></span>
+                            <a href="./assets/docs/Convocatoria_Observatorio_Anticorrupcion_vf.pdf" target="_blank">Leer
+                                aquí</a>
                         </label>
                     </div>
                     <?php 
@@ -310,14 +318,14 @@
                             echo validator_field_form("He leído la Convocatoria para formar parte del Observatorio Anticorrupción y estoy de
                             acuerdo que en los casos no previstos en las etapas del proceso de selección sean resueltos
                             por la Secretaría Ejecutiva del Sistema Anticorrupción del Estado de
-                            Tlaxcala.",ErrorType::REQUIRED);
+                            Tlaxcala.","REQUIRED");
                             $formValid=False;
                         }else{
                             if(!in_array("Convocatoria", $_POST['terminos'])){
                                 echo validator_field_form("He leído la Convocatoria para formar parte del Observatorio Anticorrupción y estoy de
                                 acuerdo que en los casos no previstos en las etapas del proceso de selección sean resueltos
                                 por la Secretaría Ejecutiva del Sistema Anticorrupción del Estado de
-                                Tlaxcala.", ErrorType::REQUIRED);
+                                Tlaxcala.", "REQUIRED");
                                 $formValid=False;
                             }
                         }     
@@ -333,18 +341,20 @@
                         <label class="form-check-label" for="CartaCompromiso">
                             He leído la Carta Compromiso de integrantes del Observatorio Anticorrupción y estoy de
                             acuerdo con suscribirla en todos sus términos.<span><em>(requerido)</em></span>
+                            <a href="./assets/docs/Carta_compromiso_de_integrantes_del_Observatorio_Anticorrupción.pdf"
+                                target="_blank">Leer aquí</a>
                         </label>
                     </div>
                     <?php 
                     if(isset($_POST['save'])){                       
                         if(!isset($_POST['terminos'])){
                             echo validator_field_form("He leído la Carta Compromiso de integrantes del Observatorio Anticorrupción y estoy de
-                            acuerdo con suscribirla en todos sus términos.",ErrorType::REQUIRED);
+                            acuerdo con suscribirla en todos sus términos.","REQUIRED");
                             $formValid=False;
                         }else{
                             if(!in_array("CartaCompromiso", $_POST['terminos'])){
                                 echo validator_field_form("He leído la Carta Compromiso de integrantes del Observatorio Anticorrupción y estoy de
-                                acuerdo con suscribirla en todos sus términos.", ErrorType::REQUIRED);
+                                acuerdo con suscribirla en todos sus términos.", "REQUIRED");
                                 $formValid=False;
                             }
                         }     
@@ -368,11 +378,11 @@
                     if(isset($_POST['save'])){
                         if(!isset($_FILES['Ine'])){
                             echo validator_field_form("Credencial para votar vigente por ambas caras (anverso y
-                            reverso) expedida por el Instituto Nacional Electoral",ErrorType::REQUIRED);
+                            reverso) expedida por el Instituto Nacional Electoral","REQUIRED");
                             $formValid=False;
                         }else{
-                            $UserName = $_POST['UserName'];
-                            $LastName = $_POST['LastName'];                         
+                            $UserName = strtoupper($_POST['UserName']);
+                            $LastName = strtoupper($_POST['LastName']);                         
                             $file_name_ine=$_FILES['Ine']['name'];
                             $file_size_ine=$_FILES['Ine']['size'];
                             $file_tmp_ine=$_FILES['Ine']['tmp_name'];
@@ -386,11 +396,11 @@
                             $file_sn_ine=strtolower($file_sn_ine);
                             $file_save_name_ine="INE_".$file_sn_ine.".".$file_ext_ine;
                             if(in_array($file_ext_ine, $extensions_ine)=== False){
-                                echo validator_field_form("El archivo debe ser una imagen o un pdf", ErrorType::REQUIRED);
+                                echo validator_field_form("El archivo debe ser una imagen o un pdf", "REQUIRED");
                                 $formValid=False;
                             }
                             if($file_size_ine > 2097152){
-                                echo validator_field_form("El archivo debe ser menor a 2MB", ErrorType::REQUIRED);
+                                echo validator_field_form("El archivo debe ser menor a 2MB", "REQUIRED");
                                 $formValid=False;
                             }
                             
@@ -412,12 +422,12 @@
                     if(isset($_POST['save'])){
                         if(!isset($_FILES['ComprobanteDomicilio'])){
                             echo validator_field_form("Comprobante de domicilio no mayor a tres
-                            meses",ErrorType::REQUIRED);
+                            meses","REQUIRED");
                             $formValid=False;
                         }else
                         {
-                            $UserName = $_POST['UserName'];
-                            $LastName = $_POST['LastName'];                         
+                            $UserName = strtoupper($_POST['UserName']);
+                            $LastName = strtoupper($_POST['LastName']);                         
                             $file_name_cd=$_FILES['ComprobanteDomicilio']['name'];
                             $file_size_cd=$_FILES['ComprobanteDomicilio']['size'];
                             $file_tmp_cd=$_FILES['ComprobanteDomicilio']['tmp_name'];
@@ -431,11 +441,11 @@
                             $file_sn_cd=strtolower($file_sn_cd);
                             $file_save_name_cd="CD_".$file_sn_cd.".".$file_ext_cd;
                             if(in_array($file_ext_cd, $extensions_cd)=== False){
-                                echo validator_field_form("El archivo debe ser una imagen o un pdf", ErrorType::REQUIRED);
+                                echo validator_field_form("El archivo debe ser una imagen o un pdf", "REQUIRED");
                                 $formValid=False;
                             }
                             if($file_size_cd > 2097152){
-                                echo validator_field_form("El archivo debe ser menor a 2MB", ErrorType::REQUIRED);
+                                echo validator_field_form("El archivo debe ser menor a 2MB", "REQUIRED");
                                 $formValid=False;
                             }
                             
@@ -483,11 +493,10 @@
     
     
                                 if (mysqli_num_rows($phone)>0 || mysqli_num_rows($email)>0){
-                                    while ($data = mysqli_fetch_array($name)) { 
-                                        /* echo '<script language="javascript">alert("`' . $data["id"] . '`");</script>'; */
+                                   /*  while ($data = mysqli_fetch_array($email)) {                                        
                                         $LocalName=$data["cEmail"];
                                         $LocalEmail=$data["cTel"];
-                                     }
+                                     } */
                                      
                                      echo '<script language="javascript">alert("El usuario con el telefóno:' . $Phone . ' y correo: '. $Email .' ya esta registrado.");
                                      </script>';
@@ -507,7 +516,9 @@
                                     
                                     header('Location: Success.html'); */
                                     
-                                    echo '<script language="javascript">alert("El usuario ' .  $UserName . ' '.$LastName .' Se Registro Exitosamente!!!");
+                                    echo '<script language="javascript">
+                                    document.getElementById("register").reset();
+                                    alert("El usuario ' .  $UserName . ' '.$LastName .' Se Registro Exitosamente!!!");
                                        </script>';
                                     
                                     }
@@ -520,7 +531,9 @@
                             }
                             
                         }else{
-                            echo error("Faltan campos por llenar");
+                            echo '<script language="javascript">                           
+                            alert("El usuario ' .  $UserName . ' '.$LastName .' Faltan campos por llenar");
+                               </script>';
                         }
                     }                    
                     ?>

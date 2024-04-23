@@ -1,16 +1,11 @@
 <?php
  
 
-enum ErrorType{
-    case REQUIRED;
-    case INVALID;
-    case MATCH;
-    case OTHER;
-    case NONE;
-    case EMAIL;
-}
 
-function validator_field_form($name_field,ErrorType $errorType){
+/* Variables Para tipos de errores */
+$ErrorType = ["REQUIRED","INVALID","MATCH","OTHER","NONE","EMAIL"];
+
+function validator_field_form($name_field,$errorType){
     $getMessage = "";   
         $getMessage = message_for_field_error_type($name_field, $errorType);       
     return error($getMessage);
@@ -91,19 +86,19 @@ function message_for_field($field){
     return $message;
 }
 
-function message_for_field_error_type($field,ErrorType $errorType){
+function message_for_field_error_type($field,$errorType){
     $message = "";
     switch($errorType){
-        case ErrorType::REQUIRED:
+        case "REQUIRED":
             $message = "El campo $field es requerido";
             break;
-        case ErrorType::INVALID:
+        case "INVALID":
             $message = message_for_field($field);
             break;
-        case ErrorType::MATCH:
+        case "MATCH":
             $message = "Los correos no coinciden";
             break;
-        case ErrorType::OTHER:
+        case "OTHER":
             $message = "Ocurrio un error";
             break;
     }
