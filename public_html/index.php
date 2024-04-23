@@ -1,6 +1,10 @@
 <?php
     include("./lib/form-validations.php");
     include("./loadfile.php");
+    include "./lib/variables.php";
+    include "./lib/functions.php";
+
+
 
     $formValid = False;
    
@@ -8,13 +12,13 @@
     if(isset($_POST['save'])){
         /* escribe todos los campos que se envian en el post de este formulario*/
         if(isset($_POST['UserName']) && isset($_POST['LastName']) && isset($_POST['Email']) && isset($_POST['Phone']) && isset($_POST['Gender']) && isset($_POST['ConfirmEmail']) && isset($_POST['Reasons']) && isset($_POST['terminos']) && isset($_FILES['ComprobanteDomicilio']) && isset($_FILES['Ine'])){
-            $UserName = $_POST['UserName'];
-            $LastName = $_POST['LastName'];
-            $Email = $_POST['Email'];
-            $Phone = $_POST['Phone'];
-            $Gender = $_POST['Gender'];
-            $ConfirmEmail = $_POST['ConfirmEmail'];
-            $Reasons = $_POST['Reasons'];
+            $UserName = clean_utf(strtoupper($_POST['UserName']));
+            $LastName = clean_utf(strtoupper($_POST['LastName']));
+            $Email = strtolower($_POST['Email']);
+            $Phone = clean_utf(strtoupper($_POST['Phone']));
+            $Gender = clean_utf(strtoupper($_POST['Gender']));
+            $ConfirmEmail = strtolower($_POST['ConfirmEmail']);
+            $Reasons = clean_utf(strtoupper($_POST['Reasons']));
             $Terms = $_POST['terminos'];
             $ComprobanteDomicilio = $_FILES['ComprobanteDomicilio'];
             $Ine = $_FILES['Ine'];
@@ -22,8 +26,6 @@
         }else{
             $Terms = [];        
         }
-        
-        
     }
 ?>
 
@@ -49,7 +51,7 @@
                 <div class="mb-1 col">
                     <label for="UserName" class="form-label">Nombres</label>
                     <input type="text" class="form-control" style="text-transform: uppercase;" id="UserName"
-                        name="UserName" value="<?php if(isset($UserName)) echo $UserName ?>">
+                        name="UserName" value="<?php if(isset($UserName)){ echo $UserName; } else { echo ""; } ?>">
                     <?php
                         if(isset($_POST['save'])){
                             if(empty($UserName)){                        
@@ -210,7 +212,7 @@
                 </div>
             </div>
             <div class="row align-items-center">
-                <div class="mb-1 col">Terms
+                <div class="mb-1 col">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="NoCargo" name="terminos[]" id="NoCargo">
                         <label class="form-check-label" for="NoCargo">
@@ -403,7 +405,9 @@
                     <label for="ComprobanteDomicilio" class="form-label">Comprobante de domicilio no mayor a tres
                         meses</label>
                     <input type="file" class="form-control" id="ComprobanteDomicilio" name="ComprobanteDomicilio"
-                        accept=".jpg, .jpeg, .png, .jpeg, .pdf">
+                        accept=".jpg, .jpeg, .png, .jpeg, .pdf"> <?php
+                
+                ?>
                     <?php
                     if(isset($_POST['save'])){
                         if(!isset($_FILES['ComprobanteDomicilio'])){
@@ -445,31 +449,82 @@
             <div class="row align-items-center mt-3">
                 <button type="submit" class="btn btn-primary" name="save">Enviar Información</button>
                 <?php
-                if($formValid){
+                    if(isset($_POST['save'])){
+                        if($formValid){
                   
-                    $url_ine="";
-                    while($url_ine===""){
-                    $url_ine=uploadFile($file_tmp_ine,$file_save_name_ine,$file_type_ine);
-                    }
-                    echo "<p>".$url_ine."</p>";
-                    $url_cd="";
-                    while($url_cd===""){
-                     $url_cd=uploadFile($file_tmp_cd,$file_save_name_cd,$file_type_cd);
-                    }
-                    echo "<p>".$url_cd."</p>";
-                    echo "<p> UserName:-".$UserName."</p>";
-                    echo "<p> LastName:-".$LastName."</p>";
-                    echo "<p> Email:-".$Email."</p>";
-                    echo "<p> Phone:-".$Phone."</p>";
-                    echo "<p> Gender:-".$Gender."</p>";
-                    echo "<p> ConfirmEmail:-".$ConfirmEmail."</p>";
-                    echo "<p> Reasons:-".$Reasons."</p>";
-                    echo "<p> Terms:-".count($Terms)."</p>";
-                    echo success("La informacion se envio correctamente");                               
-                }else{
-                    echo error("Faltan campos por llenar");
-                }
-                ?>
+                            $url_ine="";
+                            while($url_ine===""){
+                            $url_ine=uploadFile($file_tmp_ine,$file_save_name_ine,$file_type_ine);
+                            }
+                           /*  echo "<p>".$url_ine."</p>"; */
+                            $url_cd="";
+                            while($url_cd===""){
+                             $url_cd=uploadFile($file_tmp_cd,$file_save_name_cd,$file_type_cd);
+                            }
+                           /*  echo "<p>".$url_cd."</p>";
+                            echo "<p> UserName:-".$UserName."</p>";
+                            echo "<p> LastName:-".$LastName."</p>";
+                            echo "<p> Email:-".$Email."</p>";
+                            echo "<p> Phone:-".$Phone."</p>";
+                            echo "<p> Gender:-".$Gender."</p>";
+                            echo "<p> ConfirmEmail:-".$ConfirmEmail."</p>";
+                            echo "<p> Reasons:-".$Reasons."</p>";
+                            echo "<p> Terms:-".count($Terms)."</p>"; */
+
+                            try {
+                                $db_connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
+
+                                if (!$db_connection) {
+                                die('No se ha podido conectar a la base de datos');
+                                }
+    
+                                $email=mysqli_query($db_connection, "SELECT * FROM ".$db_table_name." WHERE cEmail = '".$Email."'");
+                                $phone=mysqli_query($db_connection, "SELECT * FROM ".$db_table_name." WHERE cTel = '".$Phone."'");
+    
+    
+                                if (mysqli_num_rows($phone)>0 || mysqli_num_rows($email)>0){
+                                    while ($data = mysqli_fetch_array($name)) { 
+                                        /* echo '<script language="javascript">alert("`' . $data["id"] . '`");</script>'; */
+                                        $LocalName=$data["cEmail"];
+                                        $LocalEmail=$data["cTel"];
+                                     }
+                                     
+                                     echo '<script language="javascript">alert("El usuario con el telefóno:' . $Phone . ' y correo: '. $Email .' ya esta registrado.");
+                                     </script>';
+    
+                                }else {
+	
+                                    $insert_value = 'INSERT INTO `' . $db_name . '`.`'.$db_table_name.'` (`cNombre` , `cApellidos` , `cTel` ,  `cEmail`, `cGenero` , `cRazones` , `cUrl_Ine` ,  `cUrl_Comprobante_Domicilio`,`bTerminos`) VALUES ("' . $UserName . '", "' . $LastName. '", "' . $Phone . '", "' . $Email . '", "' . $Gender . '", "' . $Reasons . '", "' . $url_ine . '", "' . $url_cd . '",True)';
+                                    
+                                    mysqli_select_db($db_connection, $db_name);
+                                    
+                                    $retry_value = mysqli_query($db_connection, $insert_value);
+                                    
+                                    if (!$retry_value) {
+                                       die('Error: ' . mysqli_error());
+                                    }
+                                    /* 
+                                    
+                                    header('Location: Success.html'); */
+                                    
+                                    echo '<script language="javascript">alert("El usuario ' .  $UserName . ' '.$LastName .' Se Registro Exitosamente!!!");
+                                       </script>';
+                                    
+                                    }
+                                    
+                                    mysqli_close($db_connection);
+                                    
+                            } catch (\Throwable $th) {
+                                echo $e->getMessage();
+                                die();
+                            }
+                            
+                        }else{
+                            echo error("Faltan campos por llenar");
+                        }
+                    }                    
+                    ?>
+
             </div>
         </form>
     </div>
