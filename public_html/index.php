@@ -21,6 +21,7 @@
             $Terms = $_POST['terminos'];
             $ComprobanteDomicilio = $_FILES['ComprobanteDomicilio'];
             $Ine = $_FILES['Ine'];
+            
             $formValid = True;
         }else{
             $Terms = [];        
@@ -29,7 +30,7 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" id="resultado">
 
 <head>
     <meta charset="UTF-8">
@@ -51,8 +52,8 @@
             </div>
         </div>
         <h1 class="mb-3 mt-1">Registro de Observatorios Ciudadanos </h1>
-        <form id="register" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST"
-            class=" border border-1 rounded p-5 m-0 opacity-75" enctype="multipart/form-data">
+        <form id="register" enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>"
+            method="POST" class=" border border-1 rounded p-5 m-0 opacity-75">
             <div class="row align-items-center">
                 <div class="mb-1 col">
                     <label for="UserName" class="form-label">Nombres</label>
@@ -66,8 +67,7 @@
                             }     
                     }           
                     ?>
-
-
+                    <div id="err_name"></div>
                 </div>
                 <div class="mb-1 col">
                     <label for="LastName" class="form-label">Apellidos</label>
@@ -81,6 +81,7 @@
                         }   
                     }                 
                     ?>
+                    <div id="err_lastname"></div>
                 </div>
             </div>
             <div class="row align-items-center">
@@ -106,6 +107,7 @@
                         }
                     }
                     ?>
+                    <div id="err_phone"></div>
                 </div>
                 <div class="mb-1 col">
                     <label for="Gender" class="form-label">Genero <span><em>(requerido para fines
@@ -140,6 +142,7 @@
                         }  
                     }                  
                     ?>
+                    <div id="err_email"></div>
                 </div>
                 <div class="mb-1 col">
                     <label for="ConfirmEmail" class="form-label">Confirmar Correo Electrónico</label>
@@ -164,6 +167,7 @@
                         }
                     }                    
                     ?>
+                    <div id="err_confirm_email"></div>
                 </div>
             </div>
             <div class=" row align-items-center">
@@ -182,6 +186,7 @@
                         }     
                     }               
                     ?>
+                    <div id="err_reasons"></div>
                 </div>
             </div>
             <div class="row align-items-center">
@@ -215,6 +220,7 @@
                         }     
                     }               
                     ?>
+                    <div id="err_no_registrado"></div>
                 </div>
             </div>
             <div class="row align-items-center">
@@ -243,6 +249,7 @@
                         }     
                     }               
                     ?>
+                    <div id="err_no_cargo"></div>
                 </div>
             </div>
             <div class="row align-items-center">
@@ -271,6 +278,7 @@
                         }     
                     }               
                     ?>
+                    <div id="err_no_dirigente"></div>
                 </div>
             </div>
             <div class="row align-items-center">
@@ -295,6 +303,7 @@
                         }     
                     }               
                     ?>
+                    <div id="err_no_servidor"></div>
                 </div>
             </div>
             <div class="row align-items-center">
@@ -331,6 +340,7 @@
                         }     
                     }               
                     ?>
+                    <div id="err_convocatoria"></div>
                 </div>
             </div>
             <div class="row align-items-center">
@@ -360,7 +370,9 @@
                         }     
                     }               
                     ?>
+                    <div id="err_carta_compromiso"></div>
                 </div>
+                <div id="err_all_terms"></div>
             </div>
             <div class="row align-items-center">
                 <div class="mb-1 col">
@@ -395,6 +407,7 @@
                             $file_sn_ine=str_replace(" ", "_", $UserName." ".$LastName);
                             $file_sn_ine=strtolower($file_sn_ine);
                             $file_save_name_ine="INE_".$file_sn_ine.".".$file_ext_ine;
+                           
                             if(in_array($file_ext_ine, $extensions_ine)=== False){
                                 echo validator_field_form("El archivo debe ser una imagen o un pdf", "REQUIRED");
                                 $formValid=False;
@@ -407,6 +420,7 @@
                         }        
                     }                       
                     ?>
+                    <div id="err_ine"></div>
 
                 </div>
             </div>
@@ -439,7 +453,7 @@
                             $extensions_cd= array("jpeg","jpg","png","pdf");
                             $file_sn_cd=str_replace(" ", "_", $UserName." ".$LastName);
                             $file_sn_cd=strtolower($file_sn_cd);
-                            $file_save_name_cd="CD_".$file_sn_cd.".".$file_ext_cd;
+                            $file_save_name_cd="CD_".$file_sn_cd.".".$file_ext_cd;                          
                             if(in_array($file_ext_cd, $extensions_cd)=== False){
                                 echo validator_field_form("El archivo debe ser una imagen o un pdf", "REQUIRED");
                                 $formValid=False;
@@ -453,11 +467,13 @@
                         }    
                     }                   
                    ?>
+                    <div id="err_comprobante_domicilio"></div>
                 </div>
             </div>
 
             <div class="row align-items-center mt-3">
-                <button type="submit" class="btn btn-primary" name="save">Enviar Información</button>
+                <button type="submit" class="btn btn-primary" name="save" id="save">Enviar
+                    Información</button>
                 <?php
                     if(isset($_POST['save'])){
                         if($formValid){
@@ -517,13 +533,15 @@
                                     header('Location: Success.html'); */
                                     
                                     echo '<script language="javascript">
-                                    document.getElementById("register").reset();
+                                  
                                     alert("El usuario ' .  $UserName . ' '.$LastName .' Se Registro Exitosamente!!!");
                                        </script>';
                                     
                                     }
                                     
                                     mysqli_close($db_connection);
+                                   
+                                    die();
                                     
                             } catch (\Throwable $th) {
                                 echo $e->getMessage();
@@ -532,7 +550,7 @@
                             
                         }else{
                             echo '<script language="javascript">                           
-                            alert("El usuario ' .  $UserName . ' '.$LastName .' Faltan campos por llenar");
+                            alert("Faltan campos por llenar");
                                </script>';
                         }
                     }                    
@@ -540,10 +558,11 @@
 
             </div>
         </form>
+
     </div>
-    <script src="./assets/js/bootstrap.min.js"></script>
-
-
+    <script src="./assets/scripts/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./assets/scripts/scripts.js"></script>
 </body>
 
 </html>
