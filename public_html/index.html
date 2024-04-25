@@ -21,13 +21,18 @@
           <img src="./assets/img/logo.png" alt="Header register" />
         </div>
       </div>
-      <h1 class="mb-3 mt-1">Registro de Observatorios Ciudadanos</h1>
+      <h1 class="mb-3 mt-1">Formulario del Observatorio Anticorrupción</h1>
       <form
         id="register"
         enctype="multipart/form-data"
         method="POST"
         class="border border-1 rounded p-5 m-0 opacity-75"
       >
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <h3>Por favor, proporciona la información siguiente:</h3>
+          </div>
+        </div>
         <div class="row align-items-center">
           <div class="mb-1 col">
             <label for="UserName" class="form-label">Nombres</label>
@@ -117,7 +122,11 @@
             <div id="err_reasons"></div>
           </div>
         </div>
-        <div class="row align-items-center"></div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <h3>Declaro bajo protesta de decir verdad:</h3>
+          </div>
+        </div>
         <div class="row align-items-center">
           <div class="mb-1 col">
             <div class="form-check">
@@ -292,6 +301,7 @@
     </div>
     <script src="./assets/scripts/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="./assets/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript" src="./assets/scripts/scripts.js"></script>
   </body>
 </html>

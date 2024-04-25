@@ -4,3 +4,4 @@ docker/mysql/mysql.cnf
 docker/nginx/logs/access.log
 docker/nginx/logs/error.log
 public_html/credentials.json
+public_html/*/credentials.json

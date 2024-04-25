@@ -1,6 +1,6 @@
 <?php
     include("./form-validations.php");
-    include("../loadfile.php");
+    include("./loadfile.php");
     include "./variables.php";
 
     $formValid=
@@ -20,12 +20,11 @@
     $Error_Terms=
     $Error_ComprobanteDomicilio=
     $Error_Ine = False;
-    echo "<script> console.log('save')</script>";
     if(isset($_POST['save'])){
-        echo "<script> console.log('....save')</script>";
+        
         /* escribe todos los campos que se envian en el post de este formulario*/
         if(isset($_POST['UserName']) && isset($_POST['LastName']) && isset($_POST['Email']) && isset($_POST['Phone']) && isset($_POST['Gender']) && isset($_POST['ConfirmEmail']) && isset($_POST['Reasons']) && isset($_POST['terminos']) && isset($_FILES['ComprobanteDomicilio']) && isset($_FILES['Ine'])){
-            echo "<script> console.log('....Isset')</script>";
+            
             $UserName = strtoupper($_POST['UserName']);
             $LastName = strtoupper($_POST['LastName']);
             $Email = strtolower($_POST['Email']);
@@ -36,7 +35,7 @@
             $Terms = $_POST['terminos'];
             $ComprobanteDomicilio = $_FILES['ComprobanteDomicilio'];
             $Ine = $_FILES['Ine'];        
-            $Error_UserName=validate_empty_field($UserName,"Nombres");
+            /* $Error_UserName=validate_empty_field($UserName,"Nombres");
             $Error_LastName=validate_empty_field($LastName, "Apellidos");
             $Error_Email=validate_empty_field($Email, "Correo Electrónico");
             $Error_Phone=validate_empty_field($Phone, "Número Telefónico");
@@ -45,12 +44,12 @@
             $Error_Reasons=validate_empty_field($Reasons, "Menciona las razones por las cules desea ser integrante del Observatorio Anticorrupción");
             $Error_Terms=validate_empty_field($Terms, "Acepta los terminos y condiciones");
             $Error_ComprobanteDomicilio=validate_empty_field($ComprobanteDomicilio, "Comprobante de Domicilio");
-            $Error_Ine=validate_empty_field($Ine, "Ine");
+            $Error_Ine=validate_empty_field($Ine, "Ine"); */
 
-            echo "<script> console.log('name','".$Error_UserName."'); </script>";
+            
 
             /* Si hay errores, no se guarda el registro y se muestran los errores */
-            if($Error_UserName || $Error_LastName || $Error_Email || $Error_Phone || $Error_Gender || $Error_ConfirmEmail || $Error_Reasons || $Error_Terms || $Error_ComprobanteDomicilio || $Error_Ine){
+          /*   if($Error_UserName || $Error_LastName || $Error_Email || $Error_Phone || $Error_Gender || $Error_ConfirmEmail || $Error_Reasons || $Error_Terms || $Error_ComprobanteDomicilio || $Error_Ine){
                 $formValid = False;
                 if($Error_UserName) echo $Error_UserName;
                 if($Error_LastName) echo $Error_LastName;
@@ -62,17 +61,71 @@
                 if($Error_Terms) echo $Error_Terms;
                 if($Error_ComprobanteDomicilio) echo $Error_ComprobanteDomicilio;
                 if($Error_Ine) echo $Error_Ine;
-            }
+            } */
 
-            echo error("este es un error");
+            if(!isset($_FILES['Ine'])){               
+                $formValid=False;
+            }else{                                
+                $file_name_ine=$_FILES['Ine']['name'];
+                $file_size_ine=$_FILES['Ine']['size'];
+                $file_tmp_ine=$_FILES['Ine']['tmp_name'];
+                $file_type_ine=$_FILES['Ine']['type'];
+                $exp_ine=explode('.', $file_name_ine);
+                $end_ine=end($exp_ine);
+                $file_ext_ine=strtolower($end_ine);
+              
+                $extensions_ine= array("jpeg","jpg","png","pdf");
+                $file_sn_ine=str_replace(" ", "_", $UserName." ".$LastName);
+                $file_sn_ine=strtolower($file_sn_ine);
+                $file_save_name_ine="INE_".$file_sn_ine.".".$file_ext_ine;
+               
+                if(in_array($file_ext_ine, $extensions_ine)=== False){
+                    echo validator_field_form("El archivo debe ser una imagen o un pdf", "REQUIRED");
+                    $formValid=False;
+                }
+                if($file_size_ine > 2097152){
+                    echo validator_field_form("El archivo debe ser menor a 2MB", "REQUIRED");
+                    $formValid=False;
+                }
                 
+            }
+            if(!isset($_FILES['ComprobanteDomicilio'])){
+                echo validator_field_form("Comprobante de domicilio no mayor a tres
+                meses","REQUIRED");
+                $formValid=False;
+            }else
+            {
+                $UserName = strtoupper($_POST['UserName']);
+                $LastName = strtoupper($_POST['LastName']);                         
+                $file_name_cd=$_FILES['ComprobanteDomicilio']['name'];
+                $file_size_cd=$_FILES['ComprobanteDomicilio']['size'];
+                $file_tmp_cd=$_FILES['ComprobanteDomicilio']['tmp_name'];
+                $file_type_cd=$_FILES['ComprobanteDomicilio']['type'];
+                $exp_cd=explode('.', $file_name_cd);
+                $end_cd=end($exp_cd);
+                $file_ext_cd=strtolower($end_cd);
+              
+                $extensions_cd= array("jpeg","jpg","png","pdf");
+                $file_sn_cd=str_replace(" ", "_", $UserName." ".$LastName);
+                $file_sn_cd=strtolower($file_sn_cd);
+                $file_save_name_cd="CD_".$file_sn_cd.".".$file_ext_cd;                          
+                if(in_array($file_ext_cd, $extensions_cd)=== False){
+                    echo validator_field_form("El archivo debe ser una imagen o un pdf", "REQUIRED");
+                    $formValid=False;
+                }
+                if($file_size_cd > 2097152){
+                    echo validator_field_form("El archivo debe ser menor a 2MB", "REQUIRED");
+                    $formValid=False;
+                }
+                
+
+            } 
+            $formValid = True;        
         }else{
-            $Terms = [];  
-
+            $Terms = [];            
         }
-
-        if($formValid){
-                  
+       
+        if($formValid){                  
             $url_ine="";
             while($url_ine===""){
             $url_ine=uploadFile($file_tmp_ine,$file_save_name_ine,$file_type_ine);
@@ -81,16 +134,7 @@
             $url_cd="";
             while($url_cd===""){
              $url_cd=uploadFile($file_tmp_cd,$file_save_name_cd,$file_type_cd);
-            }
-           /*  echo "<p>".$url_cd."</p>";
-            echo "<p> UserName:-".$UserName."</p>";
-            echo "<p> LastName:-".$LastName."</p>";
-            echo "<p> Email:-".$Email."</p>";
-            echo "<p> Phone:-".$Phone."</p>";
-            echo "<p> Gender:-".$Gender."</p>";
-            echo "<p> ConfirmEmail:-".$ConfirmEmail."</p>";
-            echo "<p> Reasons:-".$Reasons."</p>";
-            echo "<p> Terms:-".count($Terms)."</p>"; */
+            }         
 
             try {
                 $db_connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);

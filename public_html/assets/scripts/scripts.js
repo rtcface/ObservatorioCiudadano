@@ -72,6 +72,7 @@ const loading = `
 </html>
 `;
 $(document).ready(function() {
+  
     $("#register").on('submit', function(e) {
         e.preventDefault();
         console.log("onclick")
@@ -177,23 +178,13 @@ $(document).ready(function() {
             años inmediatos anteriores a la designación.`, "REQUIRED"));
           }
 
-
-
-
         }else{
           $("#err_all_terms").html(error(`Todos los terminos son requeridos`));
-        }
-
-       
-
-
-        
-
-        
+        }        
 
         if (UserName == "" || LastName == "" || Phone == "" || Gender == "" || Email == "" || ConfirmEmail == "" || Reasons == "" || terminos == "" || Ine == "" || ComprobanteDomicilio == "" || Ine === undefined || ComprobanteDomicilio === undefined) {
             $("#validaciones").html("Todos los campos son obligatorios");
-            //return false;
+            return false;
         }
         // agregar los parametros al formdata
         let formData = new FormData()
@@ -214,31 +205,52 @@ $(document).ready(function() {
         formData.append("save", "save");   
         console.log(formData);
         // enviar formdata
-        AJAX("../lib/register.php", formData).then(function(data) {
+        /* AJAX("../lib/register.php", formData).then(function(data) {
             console.log(data);
             $("#resultado").html(data);
-        });
-        /* $.ajax({
-            url: "../../lib/register.php",
-            type: "POST",
-            data: formData,           
-            beforeSend: function () {
-                $("#resultado").html(loading);
-            },
-            success: function(data) {
-                console.log("Sucees",data);
-                $("#result").html(data);
-            },
-            error: function(error) {
-                console.log("error",error);
-            }
         }); */
+         // enviar formdata
+         $.ajax({
+          url: "../../lib/register.php",
+          type: "POST",
+          data: formData,
+          contentType: false,
+          processData: false,
+          beforeSend: function () {
+              /* $("#resultado").html(loading); */
+              console.log("beforeSend", "Antes de la peticion")              
+              Swal.showLoading(Swal.getDenyButton())              
+          },
+          success: function(data) {
+            /* muestra show Swal success */
+            Swal.fire({
+              title: "Información enviada",
+              text: "Gracias por su registro",
+              icon: "success"
+            });
+          },
+          complete:function(){
+             console.log("Complete","todo ok")
+          },
+          error: function(error) {
+              console.log("ERROR",error);
+          }
+      }).done(function(data) {
+        console.log("Done",data);
+        Swal.hideLoading();
+        /* clean register form */
+        $("#register")[0].reset();
+        //Funcion
+    }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+        //Funcion
+        console.log("ERROR", errorThrown);
+    });
     });
 
     function AJAX(url,data)
     {
       return new Promise(function (resolve, reject){
-        SweetCarga.fire({ title: 'Cargando...'});
+        //SweetCarga.fire({ title: 'Cargando...'});
         $.ajax({
             url: url,
             type: 'POST',
