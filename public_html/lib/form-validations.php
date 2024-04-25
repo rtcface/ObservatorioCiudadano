@@ -27,11 +27,9 @@ function success($message){
 </div>";
 }    
 
-function validate_empty_field($field){
-    if(empty($field)){
-        return false;
-    }
-    return true;
+function validate_empty_field($field,$label){
+    if(empty($field)) return validator_field_form($label,"REQUIRED");    
+    return false;
 }
 
 function checkNumber($number){
@@ -55,19 +53,16 @@ function sanitize_email($email){
     $string = filter_var($string, FILTER_SANITIZE_STRING);
     return $string;
 }
-function validate_email($email){
-    if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-        return false;
-    }
-    return true;
+function validate_email($email){   
+    if(!filter_var( $email, FILTER_VALIDATE_EMAIL)) return message_for_field("Email");
+    return false;
 }
 
-function validate_emails_match($email,$confirmEmail){
-    if($email !== $confirmEmail){
-        return false;
-    }
-    return true;
+function validate_emails_match($email,$confirmEmail){    
+    if($email !== $confirmEmail) return message_for_field_error_type("ConfirmEmail","MATCH");
+    return false;
 }
+  
 
 function message_for_field($field){
     $message = "";

@@ -193,7 +193,7 @@ $(document).ready(function() {
 
         if (UserName == "" || LastName == "" || Phone == "" || Gender == "" || Email == "" || ConfirmEmail == "" || Reasons == "" || terminos == "" || Ine == "" || ComprobanteDomicilio == "" || Ine === undefined || ComprobanteDomicilio === undefined) {
             $("#validaciones").html("Todos los campos son obligatorios");
-            return false;
+            //return false;
         }
         // agregar los parametros al formdata
         let formData = new FormData()
@@ -212,22 +212,44 @@ $(document).ready(function() {
         }
         // agrega boton de enviar al formdata
         formData.append("save", "save");   
+        console.log(formData);
         // enviar formdata
-        $.ajax({
-            url: "index.php",
+        AJAX("../lib/register.php", formData).then(function(data) {
+            console.log(data);
+            $("#resultado").html(data);
+        });
+        /* $.ajax({
+            url: "../../lib/register.php",
             type: "POST",
-            data: formData,
-            contentType: false,
-            processData: false,
+            data: formData,           
             beforeSend: function () {
                 $("#resultado").html(loading);
             },
             success: function(data) {
-                console.log(data);
-                $("#resultado").html(success);
+                console.log("Sucees",data);
+                $("#result").html(data);
+            },
+            error: function(error) {
+                console.log("error",error);
             }
-        });
+        }); */
     });
+
+    function AJAX(url,data)
+    {
+      return new Promise(function (resolve, reject){
+        SweetCarga.fire({ title: 'Cargando...'});
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data
+        }).done(function(data) {
+            //Funcion
+        }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+            //Funcion
+        });
+      });
+    }
 
     // Add input files to array
   /*   var filesToUpload = []

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es" id="resultado">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/normalize/normalize.css" />
+
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./assets/estilos.css" />
+    <title>Registro de Observatorios Ciudadanos</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://saetlax.org/wp-content/uploads/2019/04/cropped-Logo_SAETLAX-15-150x150.png"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-register">
+        <div class="logo">
+          <img src="./assets/img/logo.png" alt="Header register" />
+        </div>
+      </div>
+      <h1 class="mb-3 mt-1">Registro de Observatorios Ciudadanos</h1>
+      <form
+        id="register"
+        enctype="multipart/form-data"
+        method="POST"
+        class="border border-1 rounded p-5 m-0 opacity-75"
+      >
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <label for="UserName" class="form-label">Nombres</label>
+            <input
+              type="text"
+              class="form-control"
+              style="text-transform: uppercase"
+              id="UserName"
+              name="UserName"
+            />
+            <div id="err_name"></div>
+          </div>
+          <div class="mb-1 col">
+            <label for="LastName" class="form-label">Apellidos</label>
+            <input
+              type="text"
+              class="form-control"
+              style="text-transform: uppercase"
+              id="LastName"
+              name="LastName"
+            />
+            <div id="err_lastname"></div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <label for="Phone" class="form-label">Número Telefónico</label>
+            <input
+              type="tel"
+              maxlength="10"
+              class="form-control"
+              id="Phone"
+              name="Phone"
+            />
+            <div id="err_phone"></div>
+          </div>
+          <div class="mb-1 col">
+            <label for="Gender" class="form-label"
+              >Genero
+              <span><em>(requerido para fines estadisticos)</em></span></label
+            >
+            <select type="text" id="Gender" name="Gender" class="form-control">
+              <option value="mujer">Mujer</option>
+              <option value="hombre">Hombre</option>
+              <option value="nobinario">No binario</option>
+            </select>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <label for="Email" class="form-label">Correo Electrónico</label>
+            <input
+              type="email"
+              style="text-transform: lowercase"
+              class="form-control"
+              id="Email"
+              name="Email"
+            />
+            <div id="err_email"></div>
+          </div>
+          <div class="mb-1 col">
+            <label for="ConfirmEmail" class="form-label"
+              >Confirmar Correo Electrónico</label
+            >
+            <input
+              type="email"
+              style="text-transform: lowercase"
+              class="form-control"
+              id="ConfirmEmail"
+              name="ConfirmEmail"
+            />
+            <div id="err_confirm_email"></div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <label for="Reasons" class="form-label"
+              >Menciona las razones por las cuales desea ser integrante del
+              Observatorio Anticorrupción</label
+            >
+            <textarea
+              class="form-control"
+              id="Reasons"
+              rows="2"
+              name="Reasons"
+            ></textarea>
+            <div id="err_reasons"></div>
+          </div>
+        </div>
+        <div class="row align-items-center"></div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="NoRegistrado"
+                name="terminos[]"
+                id="NoRegistrado"
+              />
+              <label class="form-check-label" for="NoRegistrado">
+                No haber sido registrado como candidata o candidato a cargo
+                alguno de elección popular, en los tres años inmediatos
+                anteriores a la postulación <span><em>(requerido)</em></span>
+              </label>
+            </div>
+            <div id="err_no_registrado"></div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="NoCargo"
+                name="terminos[]"
+                id="NoCargo"
+              />
+              <label class="form-check-label" for="NoCargo">
+                No haber tenido cargo alguno de elección popular en los tres
+                años inmediatos anteriores a la designación<span
+                  ><em>(requerido)</em></span
+                >
+              </label>
+            </div>
+            <div id="err_no_cargo"></div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="NoDirigente"
+                name="terminos[]"
+                id="NoDirigente"
+              />
+              <label class="form-check-label" for="NoDirigente">
+                No haber sido dirigente nacional, estatal o municipal en algún
+                partido político, en los tres años inmediatos anteriores a la
+                designación.<span><em>(requerido)</em></span>
+              </label>
+            </div>
+            <div id="err_no_dirigente"></div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="NoServidor"
+                name="terminos[]"
+                id="NoServidor"
+              />
+              <label class="form-check-label" for="NoServidor">
+                No ser servidora o servidor público<span
+                  ><em>(requerido)</em></span
+                >
+              </label>
+            </div>
+            <div id="err_no_servidor"></div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="Convocatoria"
+                name="terminos[]"
+                id="Convocatoria"
+              />
+              <label class="form-check-label" for="Convocatoria">
+                He leído la Convocatoria para formar parte del Observatorio
+                Anticorrupción y estoy de acuerdo que en los casos no previstos
+                en las etapas del proceso de selección sean resueltos por la
+                Secretaría Ejecutiva del Sistema Anticorrupción del Estado de
+                Tlaxcala.<span><em>(requerido)</em></span>
+                <a
+                  href="./assets/docs/Convocatoria_Observatorio_Anticorrupcion_vf.pdf"
+                  target="_blank"
+                  >Leer aquí</a
+                >
+              </label>
+            </div>
+            <div id="err_convocatoria"></div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="CartaCompromiso"
+                name="terminos[]"
+                id="CartaCompromiso"
+              />
+              <label class="form-check-label" for="CartaCompromiso">
+                He leído la Carta Compromiso de integrantes del Observatorio
+                Anticorrupción y estoy de acuerdo con suscribirla en todos sus
+                términos.<span><em>(requerido)</em></span>
+                <a
+                  href="./assets/docs/Carta_compromiso_de_integrantes_del_Observatorio_Anticorrupción.pdf"
+                  target="_blank"
+                  >Leer aquí</a
+                >
+              </label>
+            </div>
+            <div id="err_carta_compromiso"></div>
+          </div>
+          <div id="err_all_terms"></div>
+        </div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <h3>Por favor, adjunta los documentos siguientes:</h3>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <label for="Ine" class="form-label"
+              >Credencial para votar vigente por ambas caras (anverso y reverso)
+              expedida por el Instituto Nacional Electoral</label
+            >
+            <input
+              type="file"
+              class="form-control"
+              id="Ine"
+              name="Ine"
+              accept=".jpg, .jpeg, .png, .jpeg, .pdf"
+            />
+            <div id="err_ine"></div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="mb-1 col">
+            <label for="ComprobanteDomicilio" class="form-label"
+              >Comprobante de domicilio no mayor a tres meses</label
+            >
+            <input
+              type="file"
+              class="form-control"
+              id="ComprobanteDomicilio"
+              name="ComprobanteDomicilio"
+              accept=".jpg, .jpeg, .png, .jpeg, .pdf"
+            />
+            <div id="err_comprobante_domicilio"></div>
+          </div>
+        </div>
+        <div class="row align-items-center mt-3">
+          <button type="submit" class="btn btn-primary" name="save" id="save">
+            Enviar Información
+          </button>
+        </div>
+      </form>
+      <div id="result"></div>
+    </div>
+    <script src="./assets/scripts/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./assets/scripts/scripts.js"></script>
+  </body>
+</html>
