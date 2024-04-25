@@ -217,10 +217,29 @@ $(document).ready(function() {
           contentType: false,
           processData: false,
           beforeSend: function () {
-              /* $("#resultado").html(loading); */
-              console.log("beforeSend", "Antes de la peticion")              
-              Swal.showLoading(Swal.getDenyButton())              
-          },
+              /* muestra show Swal loading */
+              Swal.fire({
+                  title: "Cargando...",
+                  text: "Espere un momento porfavor",
+                  icon: "info",
+                  showConfirmButton: false,
+                  allowOutsideClick: false,
+                  allowEscapeKey: false,
+                  allowEnterKey: false,
+                  showCloseButton: false,
+                  showCancelButton: false,
+                  showLoaderOnConfirm: true,
+                  preConfirm: function() {
+                      return new Promise(function(resolve) {
+                          setTimeout(function() {
+                              Swal.hideLoading();
+                              resolve();
+                          }, 2000);
+                      });
+                  }
+              });
+          },      
+             
           success: function(data) {
             /* muestra show Swal success */
             Swal.fire({
