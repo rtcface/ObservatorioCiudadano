@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/normalize/normalize.css" />
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./assets/reporte.css" />
+    <title>Reporte de usuarios registrados</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://saetlax.org/wp-content/uploads/2019/04/cropped-Logo_SAETLAX-15-150x150.png"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-register">
+        <div class="logo">
+          <img src="./assets/img/logo.png" alt="Header register" />
+        </div>
+        <h1 class="mb-3 mt-1">
+          Reporte del Formulario Observatorio Anticorrupción
+        </h1>
+      </div>
+      <div class="report-container">
+        <div id="example"></div>
+        <div class="card text-center">
+          <div class="card-header">Lista de usuarios registrados</div>
+          <div class="card-body">
+            <table id="table-report" class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nombres</th>
+                  <th scope="col">Apellidos</th>
+                  <th scope="col">Número Telefónico</th>
+                  <th scope="col">Genero</th>
+                  <th scope="col">Correo Electrónico</th>
+                  <th scope="col">Razones para ser integrante</th>
+                  <th scope="col">Ine</th>
+                  <th scope="col">Comprobante de domicilio</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="card-footer text-muted">
+            <button type="submit" value="" class="btn btn-primary">
+              Actualizar
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="report"></div>
+    </div>
+    <script src="./assets/scripts/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./assets/scripts/report.js"></script>
+  </body>
+</html>
