@@ -92,7 +92,7 @@ function message_for_field_error_type($field,$errorType){
 }
 
 function eliminar_acentos($cadena){
-		
+    strtoupper($cadena);
     //Reemplazamos la A y a
     $cadena = str_replace(
     array('Á', 'À', 'Â', 'Ä', 'á', 'à', 'ä', 'â', 'ª'),

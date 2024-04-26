@@ -26,8 +26,8 @@
         /* escribe todos los campos que se envian en el post de este formulario*/
         if(isset($_POST['UserName']) && isset($_POST['LastName']) && isset($_POST['Email']) && isset($_POST['Phone']) && isset($_POST['Gender']) && isset($_POST['ConfirmEmail']) && isset($_POST['Reasons']) && isset($_POST['terminos']) && isset($_FILES['ComprobanteDomicilio']) && isset($_FILES['Ine'])){
             
-            $UserName = strtoupper($_POST['UserName']);
-            $LastName = strtoupper($_POST['LastName']);
+            $UserName = strtoupper(eliminar_acentos($_POST['UserName']));
+            $LastName = strtoupper(eliminar_acentos($_POST['LastName']));
             $Email = strtolower($_POST['Email']);
             $Phone = strtoupper($_POST['Phone']);
             $Gender = strtoupper($_POST['Gender']);
