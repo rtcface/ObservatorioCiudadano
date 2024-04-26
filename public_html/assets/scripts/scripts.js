@@ -1,76 +1,4 @@
-const success = `
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./assets/normalize/normalize.css" />
 
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="./assets/estilos.css" />
-    <title>Gracias Registro de Observatorios Ciudadanos</title>
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="https://saetlax.org/wp-content/uploads/2019/04/cropped-Logo_SAETLAX-15-150x150.png"
-    />
-  </head>
-  <body>
-    
-      <div class="message-thanks">
-        <div class="header-register">
-          <div class="logo">
-            <img src="./assets/img/logo.png" alt="Header register" />
-          </div>
-        </div>
-        <div class="messge">
-          <h1>Gracias por su registro</h1>
-        </div>
-        <a href="./index.php" class="btn btn-success">Regresar</a>
-      </div>
-   
-  </body>
-</html>
-`;
-
-
-const loading = `
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./assets/normalize/normalize.css" />
-
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="./assets/estilos.css" />
-    <title>Gracias Registro de Observatorios Ciudadanos</title>
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="https://saetlax.org/wp-content/uploads/2019/04/cropped-Logo_SAETLAX-15-150x150.png"
-    />
-  </head>
-  <body>
-   
-      <div class="message-thanks">
-        <div class="header-register">
-          <div class="logo">
-            <img src="./assets/img/logo.png" alt="Header register" />
-          </div>
-        </div>
-        <div class="messge">
-          <h1>Espere un momento porfavor</h1>
-          <div class="loading">
-          <img src="./assets/img/loading.gif" alt="loading" />   
-          </div>       
-        </div>
-        
-      </div>
-    
-  </body>
-</html>
-`;
 $(document).ready(function() {
   
     $("#register").on('submit', function(e) {
@@ -126,12 +54,17 @@ $(document).ready(function() {
             
         }
         if (LastName == "") {
-            $("#err_lastname").html(validator_field_form("Apellidos", "REQUIRED"));
-            
+            $("#err_lastname").html(validator_field_form("Apellidos", "REQUIRED"));            
         }
         if (Phone == "") {
             $("#err_phone").html(validator_field_form("Telefono", "REQUIRED"));
             
+        }else{
+          /*valida que se un numero valido de 10 digitos */
+          if(!validarNumero(Phone)) {
+            $("#err_phone").html(validator_field_form("Phone", "INVALID"));
+          }
+          
         }
         if (Gender == "") {
             $("#err_gender").html(validator_field_form("Genero", "REQUIRED"));
@@ -139,12 +72,29 @@ $(document).ready(function() {
         }
         if (Email == "") {
             $("#err_email").html(validator_field_form("Email", "REQUIRED"));
-           
+        }else{
+          /*valida que sea un email valido */
+          if(!validarEmail(Email)) {
+            $("#err_email").html(validator_field_form("Email", "INVALID"));
+          }
         }
         if (ConfirmEmail == "") {
             $("#err_confirm_email").html(validator_field_form("Confirmar Email", "REQUIRED"));
            
+        }else{
+          /*valida que sea un email valido */
+          if(!validarEmail(ConfirmEmail)) {
+            $("#err_confirm_email").html(validator_field_form("Email", "INVALID"));
+          }
         }
+
+        if(!validarCorreos(Email,ConfirmEmail)){
+          $("#err_confirm_email").html(validator_field_form("Email", "MATCH"));
+        }
+         if(!validarCorreos(Email,ConfirmEmail)){
+          $("#err_email").html(validator_field_form("Email", "MATCH"));
+        }
+        
         if (Reasons == "") {
             $("#err_reasons").html(validator_field_form("Motivo", "REQUIRED"));
            
@@ -177,8 +127,23 @@ $(document).ready(function() {
             $("#err_no_dirigente").html(validator_field_form(` No haber sido dirigente nacional, estatal o municipal en algún partido político, en los tres
             años inmediatos anteriores a la designación.`, "REQUIRED"));
           }
-
-        }else{
+          
+          if(!terminos.includes("NoServidor")){
+            $("#err_no_servidor").html(validator_field_form(` No ser servidora o servidor público`, "REQUIRED"));
+          }
+          if(!terminos.includes("Convocatoria")){
+            $("#err_convocatoria").html(validator_field_form(` He leído la Convocatoria para formar parte del Observatorio
+            Anticorrupción y estoy de acuerdo que en los casos no previstos
+            en las etapas del proceso de selección sean resueltos por la
+            Secretaría Ejecutiva del Sistema Anticorrupción del Estado de
+            Tlaxcala.`, "REQUIRED"));
+          }
+          if(!terminos.includes("CartaCompromiso")){
+            $("#err_carta_compromiso").html(validator_field_form(` He leído la Carta Compromiso de integrantes del Observatorio
+            Anticorrupción y estoy de acuerdo con suscribirla en todos sus
+            términos.`, "REQUIRED"));
+          }
+           }else{
           $("#err_all_terms").html(error(`Todos los terminos son requeridos`));
         }        
 
@@ -218,10 +183,9 @@ $(document).ready(function() {
           processData: false,
           beforeSend: function () {
               /* muestra show Swal loading */
+              
               Swal.fire({
-                  title: "Cargando...",
-                  text: "Espere un momento porfavor",
-                  icon: "info",
+                  html: ` <div class="message"><h3>Espere un momento por favor...</h3><div class="loading"><img src="./assets/img/loadingb.gif" alt="loading" /></div></div>`,               
                   showConfirmButton: false,
                   allowOutsideClick: false,
                   allowEscapeKey: false,
@@ -231,8 +195,7 @@ $(document).ready(function() {
                   showLoaderOnConfirm: true,
                   preConfirm: function() {
                       return new Promise(function(resolve) {
-                          setTimeout(function() {
-                              Swal.hideLoading();
+                          setTimeout(function() {                             
                               resolve();
                           }, 2000);
                       });
@@ -259,6 +222,26 @@ $(document).ready(function() {
         Swal.hideLoading();
         /* clean register form */
         $("#register")[0].reset();
+        /* clean all errors */
+        $("#err_name").html("");
+        $("#err_lastname").html("");
+        $("#err_phone").html("");
+     
+        $("#err_email").html("");
+        $("#err_confirm_email").html("");
+        $("#err_reasons").html("");
+        $("#err_ine").html("");
+        $("#err_comprobante_domicilio").html("");
+        $("#err_no_registrado").html("");
+        $("#err_no_cargo").html("");
+        $("#err_no_dirigente").html("");
+        $("#err_no_servidor").html("");
+        $("#err_convocatoria").html("");
+        $("#err_carta_compromiso").html("");
+        $("#err_all_terms").html("");
+
+
+         
         //Funcion
     }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
         //Funcion
@@ -281,42 +264,7 @@ $(document).ready(function() {
         });
       });
     }
-
-    // Add input files to array
-  /*   var filesToUpload = []
-  
-    //On Change loop through all file and push to array[]
-    $('#inputId').on('change', function(e) {
-      for (var i = 0; i < this.files.length; i++) {
-        filesToUpload.push(this.files[i]);
-      }
-    });
-  
-    // Form submission
-    $("#register").on('submit', function(e) {
-      e.preventDefault();
-  
-      //Store form Data
-      let formData = new FormData()
-      //Loop through array of file and append form Data
-      for (let i = 0; i < filesToUpload.length; i++) {
-        let file = filesToUpload[i]
-        formData.append("uploaded_files[]", file);
-      }
-  
-      //Fetch Request
-      url = '../php/submit.php';
-      fetch(url, {
-          method: 'POST',
-          body: formData
-        })
-        .then(function(response) {
-          return response.text();
-        })
-        .then(function(body) {
-          console.log(body);
-        });
-    }) */
+    
   });
 
 
@@ -329,10 +277,9 @@ $(document).ready(function() {
 
   function message_for_field(field){
     let message = "";
-    switch (field) {
-       
+    switch (field) {       
         case "Email":
-            message = "Email";
+            message = "Por favor escriba un correo valido";
             break;
         case "ConfirmEmail":
             message = "Confirmar Email";
@@ -342,6 +289,7 @@ $(document).ready(function() {
             break;
         
     }
+    return message;
   }
 
   function message_for_field_error_type (field, errorType){
@@ -362,49 +310,33 @@ $(document).ready(function() {
   }
   return message;
   }
-
-
-
   function  validator_field_form(name_field,errorType){
     let getMessage = "";   
          getMessage = message_for_field_error_type(name_field, errorType);       
     return error(getMessage);
 }
 
-
-
-function realizaProceso(UserName,LastName,Phone,Gender,Email,ConfirmEmail,Reasons,Ine){     
-    let parameters = {
-        "UserName": UserName,
-        "LastName": LastName,
-        "Phone": Phone,
-        "Gender": Gender,
-        "Email": Email,
-        "ConfirmEmail": ConfirmEmail,
-        "Reasons": Reasons,
-        "Ine": Ine,
-        
-    };
-    console.log(JSON.stringify(parameters));
-    /* var parametros = {
-            "valorCaja1" : valorCaja1,
-            "valorCaja2" : valorCaja2
-    };
-    $.ajax({
-            data:  parametros,
-            url:   'index.php',
-            type:  'post',
-            beforeSend: function () {
-                    $("#resultado").html("Procesando, espere por favor...");
-            },
-            success:  function (response) {
-                    $("#resultado").html(response);
-            }
-    }); */
+/* valida que se un numero valido de 10 digitos */
+function validarNumero(numero) {
+  if (numero.length === 10) {
+    return true;
+  } else {
+    return false;
+  }
+}
+/* valida email valido */
+function validarEmail(email) {
+  var regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  return regex.test(email) ? true : false;
+}
+/*  valida que los correos coincidan  */
+function validarCorreos(email, confirmEmail) {
+  if (email === confirmEmail) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
-/* ,LastName,Phone,Gender,Email,ConfirmEmail,Reasons,Ine,ComprobanteDomicilio,save)
- */
-/* /?UserName=&LastName=&Phone=&Gender=mujer&Email=&ConfirmEmail=&Reasons=&Ine=&ComprobanteDomicilio=&save= */
 
-/* , $('#Phone').val(), $('#Gender').val(), $('#Email').val(), $('#ConfirmEmail').val(), $('#Reasons').val(), $('#Ine').val(),$('#ComprobanteDomicilio').val(),$('#save').val() */
+
