@@ -3,7 +3,7 @@ $(document).ready(function() {
   
     $("#register").on('submit', function(e) {
         e.preventDefault();
-        console.log("onclick")
+       
         let UserName = $("#UserName").val();
         let LastName = $("#LastName").val();
         let Phone = $("#Phone").val();
@@ -46,7 +46,7 @@ $(document).ready(function() {
 
         //varible para guardar el archivo
         let Ine = $("#Ine")[0].files[0];
-        console.log()
+        
         let ComprobanteDomicilio = $("#ComprobanteDomicilio")[0].files[0];
         // valida campos uno por uno y mada error personalizado
         if (UserName == "") {
@@ -109,7 +109,7 @@ $(document).ready(function() {
             
         }
         // valida el array tiene NoRegistrado entre sus elemntos
-        console.log("TERMS",terminos)
+       
         if(terminos.length > 0){
 
           if (!terminos.includes("NoRegistrado")) {
@@ -168,7 +168,7 @@ $(document).ready(function() {
         }
         // agrega boton de enviar al formdata
         formData.append("save", "save");   
-        console.log(formData);
+       
         // enviar formdata
         /* AJAX("../lib/register.php", formData).then(function(data) {
             console.log(data);
@@ -177,13 +177,14 @@ $(document).ready(function() {
          // enviar formdata
          $.ajax({
           url: "../../lib/register.php",
+          dataType: "json",
           type: "POST",
           data: formData,
           contentType: false,
           processData: false,
+
           beforeSend: function () {
-              /* muestra show Swal loading */
-              
+              /* muestra show Swal loading */              
               Swal.fire({
                   html: ` <div class="message"><h3>Espere un momento por favor...</h3><div class="loading"><img src="./assets/img/loadingb.gif" alt="loading" /></div></div>`,               
                   showConfirmButton: false,
@@ -204,44 +205,53 @@ $(document).ready(function() {
           },      
              
           success: function(data) {
+            console.log(data)
+            if(data.status === "ok"){
+              Swal.fire({
+                title: "Información enviada",
+                text: data.result,
+                icon: "success"
+              });
+            }else{
+              Swal.fire({
+                title: "Error",
+                text: data.result,
+                icon: "error"
+              });
+            }
             /* muestra show Swal success */
-            Swal.fire({
-              title: "Información enviada",
-              text: "Gracias por su registro",
-              icon: "success"
-            });
+            
           },
           complete:function(){
-             console.log("Complete","todo ok")
+            /*  console.log("Complete","todo ok") */
           },
           error: function(error) {
-              console.log("ERROR",error);
+              /* console.log("ERROR",error); */
           }
       }).done(function(data) {
-        console.log("Done",data);
-        Swal.hideLoading();
-        /* clean register form */
-        $("#register")[0].reset();
-        /* clean all errors */
-        $("#err_name").html("");
-        $("#err_lastname").html("");
-        $("#err_phone").html("");
-     
-        $("#err_email").html("");
-        $("#err_confirm_email").html("");
-        $("#err_reasons").html("");
-        $("#err_ine").html("");
-        $("#err_comprobante_domicilio").html("");
-        $("#err_no_registrado").html("");
-        $("#err_no_cargo").html("");
-        $("#err_no_dirigente").html("");
-        $("#err_no_servidor").html("");
-        $("#err_convocatoria").html("");
-        $("#err_carta_compromiso").html("");
-        $("#err_all_terms").html("");
-
-
-         
+        if(data.status==="ok"){
+          Swal.hideLoading();
+          /* clean register form */
+          $("#register")[0].reset();
+          /* clean all errors */
+          $("#err_name").html("");
+          $("#err_lastname").html("");
+          $("#err_phone").html("");
+      
+          $("#err_email").html("");
+          $("#err_confirm_email").html("");
+          $("#err_reasons").html("");
+          $("#err_ine").html("");
+          $("#err_comprobante_domicilio").html("");
+          $("#err_no_registrado").html("");
+          $("#err_no_cargo").html("");
+          $("#err_no_dirigente").html("");
+          $("#err_no_servidor").html("");
+          $("#err_convocatoria").html("");
+          $("#err_carta_compromiso").html("");
+          $("#err_all_terms").html("");  
+        }
+               
         //Funcion
     }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
         //Funcion

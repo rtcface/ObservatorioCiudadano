@@ -14,18 +14,9 @@ function validator_field_form($name_field,$errorType){
 
 /* Function return error */
 function error($message){
-    return "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
-    <strong>Error!</strong> $message
-    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-</div>";
+    return $message;
 }
 
-function success($message){
-    return "<div class='alert alert-success alert-dismissible fade show' role='alert'>
-    <strong>Success!</strong> $message
-    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-</div>";
-}    
 
 function validate_empty_field($field,$label){
     if(empty($field)) return validator_field_form($label,"REQUIRED");    
