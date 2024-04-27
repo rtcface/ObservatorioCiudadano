@@ -45,9 +45,13 @@
               <tbody></tbody>
             </table>
           </div>
+          <iframe id="txtArea1" style="display: none"></iframe>
           <div class="card-footer text-muted">
-            <button type="submit" value="" class="btn btn-primary">
+            <button class="btn btn-primary" onclick="{updateTable()}">
               Actualizar
+            </button>
+            <button class="btn btn-secondary" onclick="fnExcelReport();">
+              Exportar a excel
             </button>
           </div>
         </div>

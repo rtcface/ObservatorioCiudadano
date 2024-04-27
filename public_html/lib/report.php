@@ -9,10 +9,10 @@ try {
     }
     
     //get user data from the database
-    $query = $db->query("SELECT * FROM ".$db_table_name." WHERE cEstatus is null");
-    
+    $query = $db->query("SELECT * FROM ".$db_table_name." WHERE cEstatus is null");     
     if($query->num_rows > 0){
-        $userData = $query->fetch_fields();
+        for ($set = array (); $row = $query->fetch_assoc(); $set[] = $row);
+        $userData = $set;
         $data['status'] = 'ok';
         $data['result'] = $userData;
     }else{
