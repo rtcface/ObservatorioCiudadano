@@ -114,15 +114,7 @@
         }
        
         if($formValid){                  
-            $url_ine="";
-            while($url_ine===""){
-            $url_ine=uploadFile($file_tmp_ine,$file_save_name_ine,$file_type_ine);
-            }
-            
-            $url_cd="";
-            while($url_cd===""){
-             $url_cd=uploadFile($file_tmp_cd,$file_save_name_cd,$file_type_cd);
-            }         
+           
 
             try {
                 $db_connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
@@ -143,6 +135,15 @@
                     $data['status'] = 'err';
                     $data['result'] = 'Error-El usuario con el telefóno:' . $Phone . ' y correo: '. $Email .' ya esta registrado';              
                 }else {
+                    $url_ine="";
+                    while($url_ine===""){
+                    $url_ine=uploadFile($file_tmp_ine,$file_save_name_ine,$file_type_ine);
+                    }
+                    
+                    $url_cd="";
+                    while($url_cd===""){
+                     $url_cd=uploadFile($file_tmp_cd,$file_save_name_cd,$file_type_cd);
+                    }         
 
                     $insert_value = 'INSERT INTO `' . $db_name . '`.`'.$db_table_name.'` (`cNombre` , `cApellidos` , `cTel` ,  `cEmail`, `cGenero` , `cRazones` , `cUrl_Ine` ,  `cUrl_Comprobante_Domicilio`,`bTerminos`) VALUES ("' . $UserName . '", "' . $LastName. '", "' . $Phone . '", "' . $Email . '", "' . $Gender . '", "' . $Reasons . '", "' . $url_ine . '", "' . $url_cd . '",True)';
                     
