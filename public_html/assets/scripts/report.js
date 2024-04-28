@@ -61,8 +61,7 @@ const ajax = () =>{
         /* console.log("ERROR",error); */
     }
 }).done(function(data) {
-  if(data.status==="ok"){
-    console.log(data.result[0]);
+  if(data.status==="ok"){   
     /* recorrer el array data.result.data y mostrar los datos en la tabla */
     for (let index = 0; index < data.result.length; index++) {
       const element = data.result[index];
@@ -93,20 +92,27 @@ const ajax = () =>{
 }
 
 function fnExcelReport() {
-  let tab_text = `<table id="table-report" class="table"><thead>
-  <tr>`;
-  let j = 0;
+  let tab_text = `<table id="table-report" class="table">
+  <tr><td>#</td><td>Nombres</td><td>Apellidos</td><td>Telefono</td><td>Genero</td><td>Email</td><td>Razones para ser integrante</td><td>Ine</td><td>Comprobante de domicilio</td></tr><tr>`;
+  
   let tab = document.querySelectorAll('#table-report tbody'); // id of table
-  console.log("table",tab);
+  
+  tab.forEach((item)=>{
+    tab_text = tab_text + item.innerHTML + "</tr>";
+    //tab_text=tab_text+"</tr>";
+  });
+  tab_text = tab_text.replace(/<textarea[^>]*>|<\/textarea>/gi, "");
+  tab_text = tab_text + "</table>";
+ console.log(tab_text);
   /* for (j = 0; j < tab.rows.length; j++) {
       tab_text = tab_text + tab.rows[j].innerHTML + "</tr></thead>";
       //tab_text=tab_text+"</tr>";
   }
  */
-  tab_text = tab_text + "</table>";
+ /*  tab_text = tab_text + "</table>";
   tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
   tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
-  tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+  tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params */
 
   var msie = window.navigator.userAgent.indexOf("MSIE ");
 
