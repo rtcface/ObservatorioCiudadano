@@ -50,63 +50,72 @@ $(document).ready(function() {
         let ComprobanteDomicilio = $("#ComprobanteDomicilio")[0].files[0];
         // valida campos uno por uno y mada error personalizado
         if (UserName == "") {
-            $("#err_name").html(validator_field_form("Nombres","REQUIRED"));
-            
+            $("#err_name").html(validator_field_form("Nombre(s)","REQUIRED"));
+            return false;
         }
         if (LastName == "") {
-            $("#err_lastname").html(validator_field_form("Apellidos", "REQUIRED"));            
+            $("#err_lastname").html(validator_field_form("Apellidos", "REQUIRED"));  
+            return false;          
         }
         if (Phone == "") {
             $("#err_phone").html(validator_field_form("Telefono", "REQUIRED"));
-            
+            return false;
         }else{
           /*valida que se un numero valido de 10 digitos */
           if(!validarNumero(Phone)) {
             $("#err_phone").html(validator_field_form("Phone", "INVALID"));
+            return false;
           }
           
         }
         if (Gender == "") {
             $("#err_gender").html(validator_field_form("Genero", "REQUIRED"));
-           
+            return false;           
         }
         if (Email == "") {
             $("#err_email").html(validator_field_form("Email", "REQUIRED"));
+            return false;
         }else{
           /*valida que sea un email valido */
           if(!validarEmail(Email)) {
             $("#err_email").html(validator_field_form("Email", "INVALID"));
+            return false;
           }
         }
         if (ConfirmEmail == "") {
             $("#err_confirm_email").html(validator_field_form("Confirmar Email", "REQUIRED"));
+            return false;
            
         }else{
           /*valida que sea un email valido */
           if(!validarEmail(ConfirmEmail)) {
             $("#err_confirm_email").html(validator_field_form("Email", "INVALID"));
+            return false;
           }
         }
 
         if(!validarCorreos(Email,ConfirmEmail)){
           $("#err_confirm_email").html(validator_field_form("Email", "MATCH"));
+          return false;
         }
          if(!validarCorreos(Email,ConfirmEmail)){
           $("#err_email").html(validator_field_form("Email", "MATCH"));
+          return false;
         }
         
         if (Reasons == "") {
             $("#err_reasons").html(validator_field_form("Motivo", "REQUIRED"));
-           
+            return false;           
         }
         
         if (Ine == "" || Ine === undefined) {
             $("#err_ine").html(validator_field_form("Ine", "REQUIRED"));
+            return false;
            
         }
         if (ComprobanteDomicilio == "" || ComprobanteDomicilio === undefined) {
             $("#err_comprobante_domicilio").html(validator_field_form("Comprobante Domicilio", "REQUIRED"));
-            
+            return false;            
         }
         // valida el array tiene NoRegistrado entre sus elemntos
        
@@ -116,20 +125,24 @@ $(document).ready(function() {
             $("#err_no_registrado").html(validator_field_form(`No haber sido
             registrado como candidata o candidato a cargo alguno de elección popular, en los tres años
             inmediatos anteriores a la postulación`, "REQUIRED"));
+            return false;
           }
 
           if (!terminos.includes("NoCargo")) {
             $("#err_no_cargo").html(validator_field_form(` No haber tenido cargo alguno de elección popular en los tres años inmediatos anteriores a la
             designación`, "REQUIRED"));
+            return false;
           }
 
           if (!terminos.includes("NoDirigente")) {
             $("#err_no_dirigente").html(validator_field_form(` No haber sido dirigente nacional, estatal o municipal en algún partido político, en los tres
             años inmediatos anteriores a la designación.`, "REQUIRED"));
+            return false;
           }
           
           if(!terminos.includes("NoServidor")){
             $("#err_no_servidor").html(validator_field_form(` No ser servidora o servidor público`, "REQUIRED"));
+            return false;
           }
           if(!terminos.includes("Convocatoria")){
             $("#err_convocatoria").html(validator_field_form(` He leído la Convocatoria para formar parte del Observatorio
@@ -137,14 +150,17 @@ $(document).ready(function() {
             en las etapas del proceso de selección sean resueltos por la
             Secretaría Ejecutiva del Sistema Anticorrupción del Estado de
             Tlaxcala.`, "REQUIRED"));
+            return false;
           }
           if(!terminos.includes("CartaCompromiso")){
             $("#err_carta_compromiso").html(validator_field_form(` He leído la Carta Compromiso de integrantes del Observatorio
             Anticorrupción y estoy de acuerdo con suscribirla en todos sus
             términos.`, "REQUIRED"));
+            return false;
           }
            }else{
           $("#err_all_terms").html(error(`Todos los terminos son requeridos`));
+          return false;
         }        
 
         if (UserName == "" || LastName == "" || Phone == "" || Gender == "" || Email == "" || ConfirmEmail == "" || Reasons == "" || terminos == "" || Ine == "" || ComprobanteDomicilio == "" || Ine === undefined || ComprobanteDomicilio === undefined) {
